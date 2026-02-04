@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse # Import this
+import os
 
 app = FastAPI()
 
@@ -16,3 +18,17 @@ def get_dummy_data():
         "status": "success",
         "items": ["apple", "banana", "cherry"]
     }
+
+@app.get("/api/download-pdf")
+def get_pdf():
+    file_path = "dummy_guide.pdf"
+    
+    # Check if file exists to avoid crashing
+    if os.path.exists(file_path):
+        return FileResponse(
+            path=file_path, 
+            filename="my_cool_guide.pdf", # Name the user sees when downloading
+            media_type="application/pdf"
+        )
+    else:
+        return {"error": "File not found on server"}
