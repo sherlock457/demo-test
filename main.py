@@ -1,7 +1,6 @@
-import os
-import base64
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse,Response
+from fastapi.responses import FileResponse # Import this
+import os
 
 app = FastAPI()
 
@@ -21,19 +20,15 @@ def get_dummy_data():
     }
 
 @app.get("/api/download-pdf")
-def get_pdf_base64_raw():
+def get_pdf():
     file_path = "dummy_guide.pdf"
     
+    # Check if file exists to avoid crashing
     if os.path.exists(file_path):
-        # 1. Read file bytes
-        with open(file_path, "rb") as pdf_file:
-            pdf_bytes = pdf_file.read()
-            
-        # 2. Encode to Base64 string
-        base64_string = base64.b64encode(pdf_bytes).decode('utf-8')
-        
-        # 3. Return ONLY the string as plain text
-        return Response(content=base64_string, media_type="text/plain")
-        
+        return FileResponse(
+            path=file_path, 
+            filename="my_cool_guide.pdf", # Name the user sees when downloading
+            media_type="application/pdf"
+        )
     else:
-        return Response(content="File not found", status_code=404)
+        return {"error": "File not found on server"}
