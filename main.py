@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse # Import this
 import os
+from pydantic import BaseModel
 
 app = FastAPI()
+
+class Payload(BaseModel):
+    text_content: str
 
 # Root endpoint
 @app.get("/")
@@ -32,3 +36,14 @@ def get_pdf():
         )
     else:
         return {"error": "File not found on server"}
+
+@app.post("/api/print-payload")
+def print_payload(payload: Payload):
+    # This prints the string to your terminal/console logs
+    print(f"Received Payload: {payload.text_content}")
+    
+    # Return a confirmation to the client
+    return {
+        "status": "success", 
+        "received_data": payload.text_content
+    }
