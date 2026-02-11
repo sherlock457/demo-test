@@ -25,7 +25,7 @@ def get_dummy_data():
 
 @app.get("/api/download-pdf")
 def get_pdf():
-    file_path = "The_Fermi_Paradox.pdf"
+    file_path = "Dummy_Financial_Expense_Report.pdf"
     
     # Check if file exists to avoid crashing
     if os.path.exists(file_path):
